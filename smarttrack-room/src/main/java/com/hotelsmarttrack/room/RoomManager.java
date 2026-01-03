@@ -28,14 +28,14 @@ public class RoomManager implements RoomService {
     
     @Override
     public RoomType createRoomType(String typeName, String description, int maxOccupancy, BigDecimal basePrice) {
-        RoomType roomType = RoomType.builder()
-                .roomTypeId(roomTypeIdGenerator.getAndIncrement())
-                .typeName(typeName)
-                .description(description)
-                .maxOccupancy(maxOccupancy)
-                .basePrice(basePrice)
-                .taxRate(BigDecimal.valueOf(0.10)) // Default 10% tax
-                .build();
+        RoomType roomType = new RoomType();
+        roomType.setRoomTypeId(roomTypeIdGenerator.getAndIncrement());
+        roomType.setTypeName(typeName);
+        roomType.setDescription(description);
+        roomType.setMaxOccupancy(maxOccupancy);
+        roomType.setBasePrice(basePrice);
+        roomType.setTaxRate(BigDecimal.valueOf(0.10)); // Default 10% tax
+        
         roomTypeDatabase.add(roomType);
         System.out.println("[RoomManager] Created room type: " + typeName);
         return roomType;
@@ -66,13 +66,13 @@ public class RoomManager implements RoomService {
                 .findFirst()
                 .orElse(null);
         
-        Room room = Room.builder()
-                .roomId(roomIdGenerator.getAndIncrement())
-                .roomNumber(roomNumber)
-                .floorNumber(floorNumber)
-                .roomType(roomType)
-                .status("Available")
-                .build();
+        Room room = new Room();
+        room.setRoomId(roomIdGenerator.getAndIncrement());
+        room.setRoomNumber(roomNumber);
+        room.setFloorNumber(floorNumber);
+        room.setRoomType(roomType);
+        room.setStatus("Available");
+        
         roomDatabase.add(room);
         System.out.println("[RoomManager] Created room: " + roomNumber);
         return room;

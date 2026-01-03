@@ -38,14 +38,13 @@ public class ReservationManager implements ReservationService {
     @Override
     public Reservation createReservation(Long guestId, Long roomTypeId, LocalDate checkIn,
                                           LocalDate checkOut, int numberOfGuests, String specialRequests) {
-        Reservation reservation = Reservation.builder()
-                .reservationId(idGenerator.getAndIncrement())
-                .checkInDate(checkIn)
-                .checkOutDate(checkOut)
-                .numberOfGuests(numberOfGuests)
-                .specialRequests(specialRequests)
-                .status("Reserved")
-                .build();
+        Reservation reservation = new Reservation();
+        reservation.setReservationId(idGenerator.getAndIncrement());
+        reservation.setCheckInDate(checkIn);
+        reservation.setCheckOutDate(checkOut);
+        reservation.setNumberOfGuests(numberOfGuests);
+        reservation.setSpecialRequests(specialRequests);
+        reservation.setStatus("Reserved");
         
         // Link guest via service interface
         guestService.getGuestById(guestId).ifPresent(reservation::setGuest);

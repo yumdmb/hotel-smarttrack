@@ -86,21 +86,30 @@ mvn test -pl smarttrack-guest
 ### Adding a New Entity
 
 1. Create the entity class in `smarttrack-base-library/src/main/java/com/hotelsmarttrack/base/entity/`
-2. Use JPA + Lombok annotations:
+2. Use JPA annotations with standard Java:
+
    ```java
-   @Data
    @Entity
    @Table(name = "your_table")
-   @NoArgsConstructor
-   @AllArgsConstructor
-   @Builder
    public class YourEntity {
        @Id
        @GeneratedValue(strategy = GenerationType.IDENTITY)
        private Long id;
        // fields...
+
+       // Default constructor
+       public YourEntity() {}
+
+       // All-args constructor
+       public YourEntity(Long id, /* other fields */) {
+           this.id = id;
+           // ...
+       }
+
+       // Getters, Setters, equals(), hashCode(), toString()
    }
    ```
+
 3. Rebuild: `mvn clean install -DskipTests`
 
 ### Adding a New Service Method
@@ -193,11 +202,6 @@ Private-Package: com.hotelsmarttrack.guest
 
 **Cause**: @ComponentScan not finding your @Service
 **Fix**: Ensure package is under `com.hotelsmarttrack`
-
-### Issue: Lombok not working
-
-**Cause**: IDE not configured for Lombok
-**Fix**: Install Lombok plugin in IntelliJ/Eclipse
 
 ---
 

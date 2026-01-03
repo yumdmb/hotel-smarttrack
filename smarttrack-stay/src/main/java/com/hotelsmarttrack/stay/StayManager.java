@@ -46,14 +46,14 @@ public class StayManager implements StayService {
     @Override
     public Stay checkInGuest(Long reservationId) {
         return reservationService.getReservationById(reservationId).map(reservation -> {
-            Stay stay = Stay.builder()
-                    .stayId(stayIdGenerator.getAndIncrement())
-                    .reservation(reservation)
-                    .guest(reservation.getGuest())
-                    .room(reservation.getAssignedRoom())
-                    .checkInTime(LocalDateTime.now())
-                    .status("Active")
-                    .build();
+            Stay stay = new Stay();
+            stay.setStayId(stayIdGenerator.getAndIncrement());
+            stay.setReservation(reservation);
+            stay.setGuest(reservation.getGuest());
+            stay.setRoom(reservation.getAssignedRoom());
+            stay.setCheckInTime(LocalDateTime.now());
+            stay.setStatus("Active");
+            
             stayDatabase.add(stay);
             
             // Update room status
@@ -68,11 +68,10 @@ public class StayManager implements StayService {
     
     @Override
     public Stay checkInWalkIn(Long guestId, Long roomId) {
-        Stay stay = Stay.builder()
-                .stayId(stayIdGenerator.getAndIncrement())
-                .checkInTime(LocalDateTime.now())
-                .status("Active")
-                .build();
+        Stay stay = new Stay();
+        stay.setStayId(stayIdGenerator.getAndIncrement());
+        stay.setCheckInTime(LocalDateTime.now());
+        stay.setStatus("Active");
         
         roomService.getRoomById(roomId).ifPresent(room -> {
             stay.setRoom(room);
@@ -100,13 +99,12 @@ public class StayManager implements StayService {
     @Override
     public IncidentalCharge recordCharge(Long stayId, String serviceType, 
                                           String description, BigDecimal amount) {
-        IncidentalCharge charge = IncidentalCharge.builder()
-                .chargeId(chargeIdGenerator.getAndIncrement())
-                .serviceType(serviceType)
-                .description(description)
-                .amount(amount)
-                .chargeTime(LocalDateTime.now())
-                .build();
+        IncidentalCharge charge = new IncidentalCharge();
+        charge.setChargeId(chargeIdGenerator.getAndIncrement());
+        charge.setServiceType(serviceType);
+        charge.setDescription(description);
+        charge.setAmount(amount);
+        charge.setChargeTime(LocalDateTime.now());
         
         getStayById(stayId).ifPresent(charge::setStay);
         chargeDatabase.add(charge);

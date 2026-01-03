@@ -66,12 +66,6 @@
             <artifactId>smarttrack-billing</artifactId>
         </dependency>
 
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

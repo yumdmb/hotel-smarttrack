@@ -24,14 +24,14 @@ public class GuestManager implements GuestService {
     
     @Override
     public Guest createGuest(String name, String email, String phone, String identificationNumber) {
-        Guest guest = Guest.builder()
-                .guestId(idGenerator.getAndIncrement())
-                .name(name)
-                .email(email)
-                .phone(phone)
-                .identificationNumber(identificationNumber)
-                .status("Active")
-                .build();
+        Guest guest = new Guest();
+        guest.setGuestId(idGenerator.getAndIncrement());
+        guest.setName(name);
+        guest.setEmail(email);
+        guest.setPhone(phone);
+        guest.setIdentificationNumber(identificationNumber);
+        guest.setStatus("Active");
+        
         guestDatabase.add(guest);
         System.out.println("[GuestManager] Created guest: " + name);
         return guest;

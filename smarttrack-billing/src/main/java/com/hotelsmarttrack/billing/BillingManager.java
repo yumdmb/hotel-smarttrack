@@ -37,19 +37,18 @@ public class BillingManager implements BillingService {
         BigDecimal taxes = roomCharges.add(incidentalCharges).multiply(BigDecimal.valueOf(0.10));
         BigDecimal totalAmount = roomCharges.add(incidentalCharges).add(taxes);
         
-        Invoice invoice = Invoice.builder()
-                .invoiceId(invoiceIdGenerator.getAndIncrement())
-                .roomCharges(roomCharges)
-                .incidentalCharges(incidentalCharges)
-                .taxes(taxes)
-                .discounts(BigDecimal.ZERO)
-                .totalAmount(totalAmount)
-                .amountPaid(BigDecimal.ZERO)
-                .outstandingBalance(totalAmount)
-                .status("Issued")
-                .issuedTime(LocalDateTime.now())
-                .payments(new ArrayList<>())
-                .build();
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(invoiceIdGenerator.getAndIncrement());
+        invoice.setRoomCharges(roomCharges);
+        invoice.setIncidentalCharges(incidentalCharges);
+        invoice.setTaxes(taxes);
+        invoice.setDiscounts(BigDecimal.ZERO);
+        invoice.setTotalAmount(totalAmount);
+        invoice.setAmountPaid(BigDecimal.ZERO);
+        invoice.setOutstandingBalance(totalAmount);
+        invoice.setStatus("Issued");
+        invoice.setIssuedTime(LocalDateTime.now());
+        invoice.setPayments(new ArrayList<>());
         
         invoiceDatabase.add(invoice);
         stayToInvoiceMap.put(stayId, invoice.getInvoiceId());
@@ -84,14 +83,13 @@ public class BillingManager implements BillingService {
     
     @Override
     public Payment processPayment(Long invoiceId, BigDecimal amount, String paymentMethod) {
-        Payment payment = Payment.builder()
-                .paymentId(paymentIdGenerator.getAndIncrement())
-                .amount(amount)
-                .paymentMethod(paymentMethod)
-                .status("Completed")
-                .transactionReference(UUID.randomUUID().toString().substring(0, 8).toUpperCase())
-                .paymentTime(LocalDateTime.now())
-                .build();
+        Payment payment = new Payment();
+        payment.setPaymentId(paymentIdGenerator.getAndIncrement());
+        payment.setAmount(amount);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setStatus("Completed");
+        payment.setTransactionReference(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        payment.setPaymentTime(LocalDateTime.now());
         
         paymentDatabase.add(payment);
         

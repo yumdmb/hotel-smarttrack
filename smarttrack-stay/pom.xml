@@ -29,12 +29,6 @@
             <artifactId>spring-context</artifactId>
         </dependency>
 
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
         <!-- OSGi Core -->
         <dependency>
             <groupId>org.osgi</groupId>

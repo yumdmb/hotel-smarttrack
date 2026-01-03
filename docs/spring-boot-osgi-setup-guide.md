@@ -63,14 +63,13 @@ graph TB
 
 ## Technology Stack
 
-| Component                 | Technology                | Version |
-| ------------------------- | ------------------------- | ------- |
-| **Framework**             | Spring Boot               | 4.0.1   |
-| **Build Tool**            | Apache Maven              | 3.9+    |
-| **OSGi Bundling**         | maven-bundle-plugin       | 5.1.9   |
-| **Java**                  | OpenJDK                   | 17+     |
-| **ORM**                   | JPA (Jakarta Persistence) | 3.x     |
-| **Boilerplate Reduction** | Lombok                    | 1.18.34 |
+| Component         | Technology                | Version |
+| ----------------- | ------------------------- | ------- |
+| **Framework**     | Spring Boot               | 4.0.1   |
+| **Build Tool**    | Apache Maven              | 3.9+    |
+| **OSGi Bundling** | maven-bundle-plugin       | 5.1.9   |
+| **Java**          | OpenJDK                   | 17+     |
+| **ORM**           | JPA (Jakarta Persistence) | 3.x     |
 
 ---
 
@@ -158,7 +157,6 @@ The parent POM (`pom.xml`) manages:
 
 - Spring Boot 4.0.1 dependency BOM
 - OSGi core dependencies
-- Lombok with annotation processor
 - maven-bundle-plugin for OSGi bundles
 - Internal module dependency versions
 
@@ -318,22 +316,6 @@ java -jar smarttrack-application/target/smarttrack-application-1.0-SNAPSHOT.jar
     <id>spring-milestones</id>
     <url>https://repo.spring.io/milestone</url>
 </repository>
-```
-
-#### Issue: Lombok annotations not processed
-
-**Solution**: Ensure `maven-compiler-plugin` has Lombok in `annotationProcessorPaths`:
-
-```xml
-<annotationProcessorPaths>
-    <path>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-    </path>
-</annotationProcessorPaths>
-```
-
 #### Issue: Circular dependency detected
 
 **Solution**: Components should only depend on `smarttrack-base-library`. Use service interfaces for inter-component communication.
@@ -344,5 +326,5 @@ java -jar smarttrack-application/target/smarttrack-application-1.0-SNAPSHOT.jar
 
 - [Spring Boot 4.0 Documentation](https://docs.spring.io/spring-boot/docs/4.0.x/reference/)
 - [Apache Felix Maven Bundle Plugin](https://felix.apache.org/documentation/subprojects/apache-felix-maven-bundle-plugin-bnd.html)
-- [Project Lombok](https://projectlombok.org/)
 - [Jakarta Persistence](https://jakarta.ee/specifications/persistence/)
+```

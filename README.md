@@ -77,7 +77,6 @@ This shallow dependency structure ensures loose coupling and high maintainabilit
 - **Spring Boot**: 4.0.1
 - **OSGi**: Core 8.0.0, Compendium 7.0.0
 - **Build Tool**: Maven 3.x
-- **Utilities**: Lombok 1.18.34
 - **Architecture**: Component-Based Software Engineering (CBSE)
 
 ## Project Structure

@@ -23,12 +23,6 @@
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
 
-        <!-- Lombok for reducing boilerplate -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
         <!-- OSGi Core (provided by runtime) -->
         <dependency>
             <groupId>org.osgi</groupId>

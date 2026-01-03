@@ -1,0 +1,156 @@
+Picked up JAVA_TOOL_OPTIONS: -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------< com.hotelsmarttrack:smarttrack-application >-------------
+[INFO] Building SmartTrack Application 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.1:run (default-cli) > test-compile @ smarttrack-application >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ smarttrack-application ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ smarttrack-application ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ smarttrack-application ---
+[INFO] skip non existing resourceDirectory c:\Users\eisra\hotel-smarttrack\smarttrack-application\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ smarttrack-application ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:4.0.1:run (default-cli) < test-compile @ smarttrack-application <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.1:run (default-cli) @ smarttrack-application ---
+[INFO] Attaching agents: []
+Picked up JAVA_TOOL_OPTIONS: -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+23:56:18.104 [main] INFO  c.h.HotelSmartTrackApplication - Starting HotelSmartTrackApplication using Java 25 with PID 15856 (C:\Users\eisra\hotel-smarttrack\smarttrack-application\target\classes started by eisra in c:\Users\eisra\hotel-smarttrack\smarttrack-application)
+23:56:18.113 [main] DEBUG c.h.HotelSmartTrackApplication - Running with Spring Boot v4.0.1, Spring v7.0.2
+23:56:18.115 [main] INFO  c.h.HotelSmartTrackApplication - No active profile set, falling back to 1 default profile: "default"
+23:56:19.010 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+23:56:19.047 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 16 ms. Found 0 JPA repository interfaces.
+23:56:19.618 [main] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+23:56:19.644 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+23:56:19.644 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.15]
+23:56:19.746 [main] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 1541 ms
+23:56:19.974 [main] INFO  org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+23:56:20.066 [main] INFO  org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.0.Final
+23:56:20.721 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+23:56:20.781 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+23:56:21.046 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:hotelsmarttrack user=SA
+23:56:21.047 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+23:56:21.134 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:hotelsmarttrack]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: HOTELSMARTTRACK/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+23:56:22.456 [main] INFO  org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+23:56:22.538 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[RoomManager] Created room type: Standard
+[RoomManager] Created room type: Deluxe
+[RoomManager] Created room type: Suite
+[RoomManager] Initialized with 3 room types
+23:56:22.607 [main] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+23:56:23.008 [main] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/'
+23:56:23.014 [main] INFO  c.h.HotelSmartTrackApplication - Started HotelSmartTrackApplication in 5.482 seconds (process running for 5.966)
+
+========================================
+   HOTEL SMARTTRACK SYSTEM
+========================================
+
+╔════════════════════════════════════════╗
+║   ROOM MANAGEMENT MODULE - DEMO        ║
+║   Enhanced Features Demonstration      ║
+╚════════════════════════════════════════╝
+
+┌─ 1. Input Validation ─────────────────┐
+  ✓ Prevented empty name
+  ✓ Prevented zero occupancy
+  ✓ Prevented negative price
+  ✓ All input validations working!
+└───────────────────────────────────────┘
+
+┌─ 2. Room Type & Pricing ──────────────┐
+  Available Room Types:
+    • Standard: $100.00 (Max: 2 guests)
+    • Deluxe: $200.00 (Max: 3 guests)
+    • Suite: $350.00 (Max: 4 guests)
+[RoomManager] Updated pricing for: Standard - New price: $120.00, Tax: 10.00%
+  ✓ Updated Standard pricing to $120.00
+└───────────────────────────────────────┘
+
+┌─ 3. Room CRUD Operations ─────────────┐
+[RoomManager] Created room: 101 (Type: Standard, Floor: 1)
+[RoomManager] Created room: 102 (Type: Standard, Floor: 1)
+[RoomManager] Created room: 201 (Type: Deluxe, Floor: 2)
+[RoomManager] Created room: 202 (Type: Deluxe, Floor: 2)
+  ✓ Created 4 rooms (101, 102, 201, 202)
+  ✓ Prevented duplicate room number
+  ✓ Prevented invalid floor number
+  Total rooms: 4
+└───────────────────────────────────────┘
+
+┌─ 4. Status Management (Enum) ─────────┐
+[RoomManager] Updated room 101 status from 'Available' to 'Occupied'
+  ✓ Room 101 → Occupied
+[RoomManager] Updated room 101 status from 'Occupied' to 'Under Cleaning'
+  ✓ Room 101 → Under Cleaning
+[RoomManager] Updated room 101 status from 'Under Cleaning' to 'Available'
+  ✓ Room 101 → Available
+  ✓ Prevented invalid status
+└───────────────────────────────────────┘
+
+┌─ 5. Enhanced Availability ────────────┐
+  Date Range: 2026-01-10 to 2026-01-13
+  Available rooms: 4
+  Available Standard rooms: 2
+  ✓ Availability checking with date integration
+└───────────────────────────────────────┘
+
+┌─ 6. Date Range Validation ────────────┐
+  ✓ Prevented reversed dates
+  ✓ Prevented past check-in
+  ✓ Prevented same-day booking
+  ✓ Prevented null dates
+  ✓ All date validations working!
+└───────────────────────────────────────┘
+
+╔════════════════════════════════════════╗
+║   ROOM MANAGEMENT DEMO COMPLETED ✓     ║
+╚════════════════════════════════════════╝
+
+========================================
+   APPLICATION READY
+========================================
+
+00:17:21.517 [SpringApplicationShutdownHook] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+00:17:21.804 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+00:17:21.891 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+00:17:22.101 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+00:17:22.139 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21:07 min
+[INFO] Finished at: 2026-01-04T00:17:22+08:00
+[INFO] ------------------------------------------------------------------------
+Terminate batch job (Y/N)? Terminate batch job (Y/N)? 

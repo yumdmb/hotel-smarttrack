@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.hotelsmarttrack</groupId>
+        <artifactId>hotel-smarttrack-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>smarttrack-base-library</artifactId>
+    <packaging>bundle</packaging>
+
+    <name>SmartTrack Base Library</name>
+    <description>Shared entities and service interfaces for Hotel SmartTrack (Rule 1 &amp; 5)</description>
+
+    <dependencies>
+        <!-- JPA Annotations for Entity classes -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+
+        <!-- Lombok for reducing boilerplate -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- OSGi Core (provided by runtime) -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <!-- Export all entity and service packages -->
+                        <Export-Package>
+                            com.hotelsmarttrack.base.entity,
+                            com.hotelsmarttrack.base.service
+                        </Export-Package>
+                        <!-- No private packages - everything is shared -->
+                        <Private-Package></Private-Package>
+                        <!-- Import JPA packages -->
+                        <Import-Package>
+                            jakarta.persistence,
+                            *;resolution:=optional
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

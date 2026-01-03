@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.hotelsmarttrack</groupId>
+        <artifactId>hotel-smarttrack-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>smarttrack-reservation</artifactId>
+    <packaging>bundle</packaging>
+
+    <name>SmartTrack Reservation Management</name>
+    <description>Reservation Management Component - ReservationManager implementation (Rule 2 &amp; 3)</description>
+
+    <dependencies>
+        <!-- Base Library (entities & interfaces) -->
+        <dependency>
+            <groupId>com.hotelsmarttrack</groupId>
+            <artifactId>smarttrack-base-library</artifactId>
+        </dependency>
+
+        <!-- Spring Context for @Service annotation -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- OSGi Core -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+        </dependency>
+
+        <!-- OSGi Compendium -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Import-Package>
+                            com.hotelsmarttrack.base.entity,
+                            com.hotelsmarttrack.base.service,
+                            org.springframework.stereotype,
+                            org.springframework.beans.factory.annotation,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Private-Package>com.hotelsmarttrack.reservation.*</Private-Package>
+                        <Export-Package></Export-Package>
+                        <_dsannotations>*</_dsannotations>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -2,6 +2,8 @@
 
 A comprehensive guide for developing the Hotel SmartTrack system using **Spring Boot 4.0.1 + OSGi**.
 
+> **Note on OSGi**: This project uses OSGi for **build-time architecture enforcement** and **IDE support**, not as a runtime container. The application runs in Spring Boot. OSGi validates module boundaries during compilation to maintain clean architecture. See [intellij-osgi-setup.md](intellij-osgi-setup.md) for IDE configuration.
+
 ---
 
 ## Quick Reference
@@ -166,7 +168,17 @@ public class StayManager implements StayService {
 
 ## OSGi Bundle Verification
 
-Each business module is an OSGi bundle. Verify the manifest:
+Each business module is an OSGi bundle. The `maven-bundle-plugin` generates manifests during build to enforce module boundaries.
+
+**What OSGi Does**:
+
+- ✅ Validates that modules only import declared dependencies
+- ✅ Prevents circular dependencies between components
+- ✅ Enforces encapsulation (implementations are private)
+- ✅ Provides IDE support for module boundaries
+- ❌ NOT used as a runtime container (app runs in Spring Boot)
+
+**Verify the manifest**:
 
 ```powershell
 # Extract and view MANIFEST.MF
@@ -175,7 +187,7 @@ jar xf smarttrack-guest-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF
 type META-INF\MANIFEST.MF
 ```
 
-**Expected headers:**
+**Expected headers**:
 
 ```
 Bundle-SymbolicName: smarttrack-guest
@@ -183,6 +195,8 @@ Export-Package: (empty for implementation modules)
 Import-Package: com.hotelsmarttrack.base.entity, com.hotelsmarttrack.base.service
 Private-Package: com.hotelsmarttrack.guest
 ```
+
+These declarations are validated at **compile time**. If you try to import a package not listed in `Import-Package`, the build will fail.
 
 ---
 

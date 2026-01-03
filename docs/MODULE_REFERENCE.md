@@ -6,8 +6,10 @@ Quick reference for each module in the Hotel SmartTrack system.
 
 ## Base Library (`smarttrack-base-library`)
 
-**Packaging**: `bundle` (OSGi)  
+**Packaging**: `bundle` (OSGi - for build-time validation)  
 **Purpose**: Shared foundation - all entities and service interfaces
+
+> **Note**: OSGi packaging enforces module boundaries during compilation. The application runs in Spring Boot, not in an OSGi container.
 
 ### Entities (8 classes)
 

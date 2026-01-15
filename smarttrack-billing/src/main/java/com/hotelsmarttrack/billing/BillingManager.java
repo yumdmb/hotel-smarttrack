@@ -4,6 +4,7 @@ import com.hotelsmarttrack.base.entity.Invoice;
 import com.hotelsmarttrack.base.entity.Payment;
 import com.hotelsmarttrack.base.service.BillingService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -20,25 +20,27 @@ import java.util.stream.Collectors;
  */
 @Service
 public class BillingManager implements BillingService {
-    
-    private final List<Invoice> invoiceDatabase = new ArrayList<>();
-    private final List<Payment> paymentDatabase = new ArrayList<>();
-    private final AtomicLong invoiceIdGenerator = new AtomicLong(1);
-    private final AtomicLong paymentIdGenerator = new AtomicLong(1);
-    
-    // Store stay ID to invoice mapping for lookup
-    private final java.util.Map<Long, Long> stayToInvoiceMap = new java.util.concurrent.ConcurrentHashMap<>();
-    
+
+    private final InvoiceRepository invoiceRepository;
+    private final PaymentRepository paymentRepository;
+
+    public BillingManager(InvoiceRepository invoiceRepository,
+                          PaymentRepository paymentRepository) {
+        this.invoiceRepository = invoiceRepository;
+        this.paymentRepository = paymentRepository;
+    }
+
     @Override
+    @Transactional
     public Invoice generateInvoice(Long stayId) {
         // Calculate charges (simplified)
         BigDecimal roomCharges = BigDecimal.valueOf(150.00); // Mock room charge
         BigDecimal incidentalCharges = BigDecimal.valueOf(50.00); // Mock incidental
         BigDecimal taxes = roomCharges.add(incidentalCharges).multiply(BigDecimal.valueOf(0.10));
         BigDecimal totalAmount = roomCharges.add(incidentalCharges).add(taxes);
-        
+
         Invoice invoice = new Invoice();
-        invoice.setInvoiceId(invoiceIdGenerator.getAndIncrement());
+        // ⚠️ invoiceId 不要自己 set，交给 @GeneratedValue
         invoice.setRoomCharges(roomCharges);
         invoice.setIncidentalCharges(incidentalCharges);
         invoice.setTaxes(taxes);
@@ -49,119 +51,134 @@ public class BillingManager implements BillingService {
         invoice.setStatus("Issued");
         invoice.setIssuedTime(LocalDateTime.now());
         invoice.setPayments(new ArrayList<>());
-        
-        invoiceDatabase.add(invoice);
-        stayToInvoiceMap.put(stayId, invoice.getInvoiceId());
-        
-        System.out.println("[BillingManager] Generated invoice for stay " + stayId + 
+
+        // 关键：为了能通过 stayId 查到 invoice，你需要把 invoice.setStay(stay对象)
+        // 但 BillingManager 目前拿不到 Stay 对象（只拿到 stayId）。
+        // 所以先保存 invoice，本阶段先不绑定 stay（等后续跨组件/服务联动再做）。
+        Invoice saved = invoiceRepository.save(invoice);
+
+        System.out.println("[BillingManager] Generated invoice for stay " + stayId +
                 " - Total: $" + totalAmount);
-        return invoice;
+        return saved;
     }
-    
+
     @Override
     public BigDecimal computeTotalCharges(Long stayId) {
         return getInvoiceByStay(stayId)
                 .map(Invoice::getTotalAmount)
                 .orElse(BigDecimal.ZERO);
     }
-    
+
     @Override
     public Optional<Invoice> getInvoiceById(Long invoiceId) {
-        return invoiceDatabase.stream()
-                .filter(i -> i.getInvoiceId().equals(invoiceId))
-                .findFirst();
+        return invoiceRepository.findById(invoiceId);
     }
-    
+
     @Override
     public Optional<Invoice> getInvoiceByStay(Long stayId) {
-        Long invoiceId = stayToInvoiceMap.get(stayId);
-        if (invoiceId != null) {
-            return getInvoiceById(invoiceId);
-        }
-        return Optional.empty();
+        // 只有当 invoice 真的绑定了 stay 才会查得到
+        return invoiceRepository.findByStay_StayId(stayId);
     }
-    
+
     @Override
+    @Transactional
     public Payment processPayment(Long invoiceId, BigDecimal amount, String paymentMethod) {
         Payment payment = new Payment();
-        payment.setPaymentId(paymentIdGenerator.getAndIncrement());
+        // ⚠️ paymentId 不要自己 set，交给 @GeneratedValue
         payment.setAmount(amount);
         payment.setPaymentMethod(paymentMethod);
         payment.setStatus("Completed");
         payment.setTransactionReference(UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         payment.setPaymentTime(LocalDateTime.now());
-        
-        paymentDatabase.add(payment);
-        
+
+        Payment savedPayment = paymentRepository.save(payment);
+
         // Update invoice
-        getInvoiceById(invoiceId).ifPresent(invoice -> {
-            invoice.getPayments().add(payment);
+        invoiceRepository.findById(invoiceId).ifPresent(invoice -> {
+            if (invoice.getPayments() == null) {
+                invoice.setPayments(new ArrayList<>());
+            }
+            invoice.getPayments().add(savedPayment);
+
             BigDecimal newPaidAmount = invoice.getAmountPaid().add(amount);
             invoice.setAmountPaid(newPaidAmount);
             invoice.setOutstandingBalance(invoice.getTotalAmount().subtract(newPaidAmount));
-            
-            // Update status
+
             if (invoice.getOutstandingBalance().compareTo(BigDecimal.ZERO) <= 0) {
                 invoice.setStatus("Paid");
             } else {
                 invoice.setStatus("Partially Paid");
             }
-            
-            System.out.println("[BillingManager] Processed payment: $" + amount + 
-                    " via " + paymentMethod + " - Ref: " + payment.getTransactionReference());
+
+            invoiceRepository.save(invoice);
+
+            System.out.println("[BillingManager] Processed payment: $" + amount +
+                    " via " + paymentMethod + " - Ref: " + savedPayment.getTransactionReference());
         });
-        
-        return payment;
+
+        return savedPayment;
     }
-    
+
     @Override
     public List<Payment> getPaymentsForInvoice(Long invoiceId) {
         return getInvoiceById(invoiceId)
                 .map(Invoice::getPayments)
                 .orElse(new ArrayList<>());
     }
-    
+
     @Override
     public BigDecimal getOutstandingBalance(Long invoiceId) {
         return getInvoiceById(invoiceId)
                 .map(Invoice::getOutstandingBalance)
                 .orElse(BigDecimal.ZERO);
     }
-    
+
     @Override
     public List<Invoice> getUnpaidInvoices() {
-        return invoiceDatabase.stream()
-                .filter(i -> i.getOutstandingBalance().compareTo(BigDecimal.ZERO) > 0)
+        return invoiceRepository.findAll().stream()
+                .filter(i -> i.getOutstandingBalance() != null
+                        && i.getOutstandingBalance().compareTo(BigDecimal.ZERO) > 0)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public List<Invoice> getInvoicesByGuest(Long guestId) {
-        return invoiceDatabase.stream()
-                .filter(i -> i.getGuest() != null && i.getGuest().getGuestId().equals(guestId))
+        return invoiceRepository.findAll().stream()
+                .filter(i -> i.getGuest() != null
+                        && i.getGuest().getGuestId() != null
+                        && i.getGuest().getGuestId().equals(guestId))
                 .collect(Collectors.toList());
     }
-    
+
     @Override
+    @Transactional
     public void updateInvoiceStatus(Long invoiceId, String status) {
-        getInvoiceById(invoiceId).ifPresent(invoice -> {
+        invoiceRepository.findById(invoiceId).ifPresent(invoice -> {
             invoice.setStatus(status);
+            invoiceRepository.save(invoice);
             System.out.println("[BillingManager] Updated invoice " + invoiceId + " status to: " + status);
         });
     }
-    
+
     @Override
+    @Transactional
     public void applyDiscount(Long invoiceId, BigDecimal discountAmount, String reason) {
-        getInvoiceById(invoiceId).ifPresent(invoice -> {
-            invoice.setDiscounts(invoice.getDiscounts().add(discountAmount));
+        invoiceRepository.findById(invoiceId).ifPresent(invoice -> {
+            BigDecimal currentDiscount = invoice.getDiscounts() == null ? BigDecimal.ZERO : invoice.getDiscounts();
+            invoice.setDiscounts(currentDiscount.add(discountAmount));
+
             BigDecimal newTotal = invoice.getRoomCharges()
                     .add(invoice.getIncidentalCharges())
                     .add(invoice.getTaxes())
                     .subtract(invoice.getDiscounts());
+
             invoice.setTotalAmount(newTotal);
             invoice.setOutstandingBalance(newTotal.subtract(invoice.getAmountPaid()));
-            
+
+            invoiceRepository.save(invoice);
+
             System.out.println("[BillingManager] Applied discount: $" + discountAmount + " - " + reason);
         });
     }
 }
+
